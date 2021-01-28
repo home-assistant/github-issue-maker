@@ -100,13 +100,9 @@ def create_issue(silent, owner, repo, token, username, title, body, labels, **kw
         issue_func = partial(make_github_issue_no_notify, auth)
 
     domain_names = Path("domains.txt").read_text().strip().splitlines()
-    domain_title = None
-    domain_body = None
-    domain_labels = None
     for domain in domain_names:
         domain_title = title.replace("{{ DOMAIN }}", domain)
         domain_body = body.replace("{{ DOMAIN }}", domain)
-        if labels:
-            domain_labels = labels + (f"integration: {domain}",)
+        domain_labels = [*labels, f"integration: {domain}"]
 
         issue_func(title=domain_title, body=domain_body, labels=domain_labels)

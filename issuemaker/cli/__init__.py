@@ -1,4 +1,5 @@
 """Provide a CLI for the issuemaker."""
+from pathlib import Path
 import click
 
 from issuemaker.create import create_issue
@@ -23,7 +24,7 @@ def common_auth_options(func):
     func = click.option(
         "-t",
         "--token",
-        prompt=True,
+        prompt=not Path(".token").exists(),
         hide_input=True,
         default="",
         help="Set the auth token.",
@@ -79,7 +80,7 @@ def common_auth_options(func):
     "--milestone",
     help="Set the issue milestone.",
 )
-@click.option("-l", "--labels", multiple=True, help="Set the issue labels.")
+@click.option("-l", "--labels", multiple=True, help="Set the issue labels.", default=[])
 def create_issue_cli(**kwargs):
     """Create issue on github.com."""
     create_issue(**kwargs)
